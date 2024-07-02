@@ -13,3 +13,5 @@
    2. SQLiteDatabase 클래스 생성
       1. insert함수 작성
       2. select함수 작성
+
+3. 리스트뷰 어댑터 설계
