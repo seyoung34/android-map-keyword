@@ -15,6 +15,17 @@ class MainActivity : AppCompatActivity() {
         val close = findViewById<ImageView>(R.id.close_icon)
         val listView = findViewById<ListView>(R.id.list_view)
 
+        val dummy: List<Place> = (0..20).map {
+            Place(
+                id = it,
+                name = "카페 $it",
+                address = "대충 주소",
+                kind = "카페"
+            )
+        }
+
+        listView.adapter = PlaceAdapter(dummy)
+
     }
 }
 

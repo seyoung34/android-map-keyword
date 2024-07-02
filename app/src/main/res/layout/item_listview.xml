@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
+        android:id="@+id/address"
         android:layout_width="260dp"
         android:layout_height="25dp"
         app:layout_constraintLeft_toRightOf="@id/location"
@@ -38,6 +39,15 @@
         android:gravity="center"
         android:text="종류"
         android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toRightOf="@id/location"
+        app:layout_constraintTop_toTopOf="@id/location"
+        android:visibility="gone"
+        android:text="0"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
