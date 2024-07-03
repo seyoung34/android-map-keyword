@@ -29,6 +29,11 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
+
+    fun dropTable(db: SQLiteDatabase) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+    }
+
 }
 
 

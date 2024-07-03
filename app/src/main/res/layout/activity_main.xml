@@ -39,4 +39,37 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
+    <TextView
+        android:id="@+id/data_generation"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.5"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="데이터생성"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:background="#FFEB3B"/>
+    <TextView
+        android:id="@+id/data_delete"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.5"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="데이터 삭제"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:background="#FFC107"/>
+
+    <TextView
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toTopOf="@id/data_generation"
+        android:text="새로고침"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:background="#CDDC39"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

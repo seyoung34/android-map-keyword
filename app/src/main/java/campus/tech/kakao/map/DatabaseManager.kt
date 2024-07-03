@@ -46,4 +46,12 @@ class DatabaseManager(context: Context) {
         return result
     }
 
+    fun dropTable(){
+        dbHelper.dropTable(db)
+    }
+
+    fun createTable() {
+        dbHelper.onCreate(db)
+    }
+
 }
