@@ -4,13 +4,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SavedSearchAdapter(private val items : List<SavedSearch>) : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
+class SavedSearchAdapter(private val items : List<SavedSearch> , private val onCloseClick : (SavedSearch) -> Unit) : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
+        val close : ImageView = view.findViewById(R.id.close)
         val id : TextView = view.findViewById(R.id.saved_search_id)
         val name: TextView = view.findViewById(R.id.saved_search_name)
     }
@@ -26,7 +28,13 @@ class SavedSearchAdapter(private val items : List<SavedSearch>) : RecyclerView.A
         with(holder) {
             id.text = item.id.toString()
             name.text = item.name
-            Log.d("Testt",holder.name.text.toString())
+            close.setOnClickListener {
+                // 클릭된 아이템의 이름으로 SavedSearch에서 제거
+//                db.deleteSavedPlace(item.name)
+                // 리스트 업데이트
+//                updateSavedSearch(dbManager, recyclerView)
+                onCloseClick(item)
+            }
         }
     }
 

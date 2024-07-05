@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val search = findViewById<EditText>(R.id.search)
-        val close = findViewById<ImageView>(R.id.close_icon)
+        val closeIcon = findViewById<ImageView>(R.id.close_icon)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val dataGeneration = findViewById<TextView>(R.id.data_generation)
         val searchBotton = findViewById<TextView>(R.id.searchBotton)
@@ -30,6 +30,10 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         savedSearch.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)    //마지막 인자는 역순으로 배치 여부
 
+        closeIcon.setOnClickListener {
+            search.text.clear()
+        }
+
         dataGeneration.setOnClickListener{
             with(dbManager){
                 for(i in 1..20){
@@ -40,19 +44,19 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        searchBotton.setOnClickListener {   //삭제 예정
-            val query = search.text.toString()
-            if (query.isEmpty()) {
-                Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val dummy = dbManager.searchPlacesKind(query)
-            recyclerView.adapter = PlaceAdapter(dummy){ place ->
-                dbManager.insertSavedPlace(place.name)  // 클릭 시 db에 이름 추가
-                updateSavedSearch(dbManager, savedSearch)
-            }
-            Log.d("testt", dummy.toString())
-        }
+//        searchBotton.setOnClickListener {   //삭제 예정
+//            val query = search.text.toString()
+//            if (query.isEmpty()) {
+//                Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show()
+//                return@setOnClickListener
+//            }
+//            val dummy = dbManager.searchPlacesKind(query)
+//            recyclerView.adapter = PlaceAdapter(dummy){ place ->
+//                dbManager.insertSavedPlace(place.name)  // 클릭 시 db에 이름 추가
+//                updateSavedSearch(dbManager, savedSearch)
+//            }
+//            Log.d("testt", dummy.toString())
+//        }
 
         //검색창에 텍스트가 바뀔 때마다 감지해서 검색
         search.addTextChangedListener(object : TextWatcher {
@@ -82,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             dbManager.createTable()
         }
 
-//        updateSavedSearch(dbManager, savedSearch)
+        updateSavedSearch(dbManager, savedSearch)
 
 
     }
@@ -90,7 +94,10 @@ class MainActivity : AppCompatActivity() {
     //저장된 검색어 업데이트
     private fun updateSavedSearch(dbManager: DatabaseManager, recyclerView: RecyclerView) {
         val savedSearch = dbManager.getSavedSearches()
-        recyclerView.adapter = SavedSearchAdapter(savedSearch)
+        recyclerView.adapter = SavedSearchAdapter(savedSearch){SavedSearch ->
+                dbManager.deleteSavedPlace(SavedSearch.id)   //클릭된 아이템의 이름으로 SavedSearch에서 제거
+                updateSavedSearch(dbManager, recyclerView)  //리스트 업데이트
+        }
     }
 }
 
