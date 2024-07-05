@@ -17,11 +17,11 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DATABASE_NAM
         private const val COLUMN_KIND = "kind"
 
         private const val TABLE_CREATE =
-            "CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "CREATE TABLE IF NOT EXISTS $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "$COLUMN_NAME TEXT, $COLUMN_ADDRESS TEXT, $COLUMN_KIND TEXT)"
 
         private const val SAVED_SEARCH_CREATE =
-            "CREATE TABLE $SAVED_SEARCH_TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY, " +
+            "CREATE TABLE IF NOT EXISTS $SAVED_SEARCH_TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY, " +
                     "$COLUMN_NAME TEXT)"
     }
 
@@ -33,11 +33,13 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $SAVED_SEARCH_TABLE_NAME")
         onCreate(db)
     }
 
     fun dropTable(db: SQLiteDatabase) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $SAVED_SEARCH_TABLE_NAME")
     }
 
 }

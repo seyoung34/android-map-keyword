@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val closeIcon = findViewById<ImageView>(R.id.close_icon)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val dataGeneration = findViewById<TextView>(R.id.data_generation)
-        val searchBotton = findViewById<TextView>(R.id.searchBotton)
+//        val searchBotton = findViewById<TextView>(R.id.searchBotton)
         val delete = findViewById<TextView>(R.id.data_delete)
         val savedSearch = findViewById<RecyclerView>(R.id.saved_search)
 
@@ -35,9 +35,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         dataGeneration.setOnClickListener{
-            with(dbManager){
-                for(i in 1..20){
-                    insertPlace("카페$i","주소$i","카페")
+            with(dbManager){    //데이터 베이스 확인하기 편하게 for문 3번
+                for(i in 1..10){
+                    insertPlace("카페$i","카페 주소$i","카페")
+                }
+                for(i in 1..10){
+                    insertPlace("약국$i","약국 주소$i","약국")
+                }
+                for(i in 1..10){
+                    insertPlace("마트$i","마트 주소$i","마트")
                 }
             }
             Toast.makeText(this, "데이터 생성 완료", Toast.LENGTH_SHORT).show()
@@ -65,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 val query = s.toString()
                 val dummy = dbManager.searchPlacesKind(query) //리턴값이 List<Place>
                 recyclerView.adapter = PlaceAdapter(dummy){ place ->
-                    dbManager.insertSavedPlace(place.name)
+                    dbManager.insertSavedPlace(place.id,place.name)
                     updateSavedSearch(dbManager, savedSearch)
                 }
                 Log.d("testt", "텍스트 변경")
@@ -80,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
+        //테이블 삭제
         delete.setOnClickListener{
             dbManager.dropTable()
             dbManager.createTable()
