@@ -20,6 +20,9 @@ class PlaceAdapter(private val items : List<Place>) : RecyclerView.Adapter<Place
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View =
             LayoutInflater.from(parent?.context).inflate(R.layout.item_recyclerview, parent, false)
+        view.setOnClickListener{
+
+        }
         return ViewHolder(view)
     }
 

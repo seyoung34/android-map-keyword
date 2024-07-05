@@ -1,6 +1,8 @@
 package campus.tech.kakao.map
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         val dataGeneration = findViewById<TextView>(R.id.data_generation)
         val searchBotton = findViewById<TextView>(R.id.searchBotton)
         val delete = findViewById<TextView>(R.id.data_delete)
-        val recentSearch = findViewById<RecyclerView>(R.id.recent_search)
+        val recentSearch = findViewById<RecyclerView>(R.id.saved_search)
 
         val dbManager = DatabaseManager(context = this)
 
@@ -50,10 +52,31 @@ class MainActivity : AppCompatActivity() {
             Log.d("testt", dummy.toString())
         }
 
+        search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트 변경 후 호출
+                val query = s.toString()
+                val dummy = dbManager.searchPlacesKind(query) //리턴값이 List<Place>
+                recyclerView.adapter = PlaceAdapter(dummy)
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트 변경 전 호출
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // 텍스트가 변경될 때마다 호출
+            }
+        })
+
+
         delete.setOnClickListener{
             dbManager.dropTable()
             dbManager.createTable()
         }
+
+
 
 
     }
