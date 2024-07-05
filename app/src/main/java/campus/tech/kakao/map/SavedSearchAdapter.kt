@@ -7,24 +7,24 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RecentSearchAdapter(private val items : List<Place>) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
+class SavedSearchAdapter(private val items : List<SavedSearch>) : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
-        //val id : TextView = view.findViewById(R.id.recent_search_id)
-        val name: TextView = view.findViewById(R.id.recent_search_name)
+        val id : TextView = view.findViewById(R.id.saved_search_id)
+        val name: TextView = view.findViewById(R.id.saved_search_name)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedSearchAdapter.ViewHolder {
         val view: View =
             LayoutInflater.from(parent?.context).inflate(R.layout.item_saved_search, parent, false)
-        return PlaceAdapter.ViewHolder(view)
+        return SavedSearchAdapter.ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: PlaceAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SavedSearchAdapter.ViewHolder, position: Int) {
         val item = items[position]
         with(holder) {
-            //id.text = item.id.toString()
+            id.text = item.id.toString()
             name.text = item.name
             Log.d("Testt",holder.name.text.toString())
         }

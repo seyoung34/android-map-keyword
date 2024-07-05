@@ -21,7 +21,7 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DATABASE_NAM
                     "$COLUMN_NAME TEXT, $COLUMN_ADDRESS TEXT, $COLUMN_KIND TEXT)"
 
         private const val SAVED_SEARCH_CREATE =
-            "CREATE TABLE $SAVED_SEARCH_TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "CREATE TABLE $SAVED_SEARCH_TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY, " +
                     "$COLUMN_NAME TEXT)"
     }
 

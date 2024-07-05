@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,12 +23,12 @@ class MainActivity : AppCompatActivity() {
         val dataGeneration = findViewById<TextView>(R.id.data_generation)
         val searchBotton = findViewById<TextView>(R.id.searchBotton)
         val delete = findViewById<TextView>(R.id.data_delete)
-        val recentSearch = findViewById<RecyclerView>(R.id.saved_search)
+        val savedSearch = findViewById<RecyclerView>(R.id.saved_search)
 
         val dbManager = DatabaseManager(context = this)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recentSearch.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)    //마지막 인자는 역순으로 배치 여부
+        savedSearch.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)    //마지막 인자는 역순으로 배치 여부
 
         dataGeneration.setOnClickListener{
             with(dbManager){
@@ -41,24 +40,31 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        searchBotton.setOnClickListener {
+        searchBotton.setOnClickListener {   //삭제 예정
             val query = search.text.toString()
             if (query.isEmpty()) {
                 Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val dummy = dbManager.searchPlacesKind(query)
-            recyclerView.adapter = PlaceAdapter(dummy)
+            recyclerView.adapter = PlaceAdapter(dummy){ place ->
+                dbManager.insertSavedPlace(place.name)  // 클릭 시 db에 이름 추가
+                updateSavedSearch(dbManager, savedSearch)
+            }
             Log.d("testt", dummy.toString())
         }
 
+        //검색창에 텍스트가 바뀔 때마다 감지해서 검색
         search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // 텍스트 변경 후 호출
                 val query = s.toString()
                 val dummy = dbManager.searchPlacesKind(query) //리턴값이 List<Place>
-                recyclerView.adapter = PlaceAdapter(dummy)
-
+                recyclerView.adapter = PlaceAdapter(dummy){ place ->
+                    dbManager.insertSavedPlace(place.name)
+                    updateSavedSearch(dbManager, savedSearch)
+                }
+                Log.d("testt", "텍스트 변경")
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -76,9 +82,15 @@ class MainActivity : AppCompatActivity() {
             dbManager.createTable()
         }
 
+//        updateSavedSearch(dbManager, savedSearch)
 
 
+    }
 
+    //저장된 검색어 업데이트
+    private fun updateSavedSearch(dbManager: DatabaseManager, recyclerView: RecyclerView) {
+        val savedSearch = dbManager.getSavedSearches()
+        recyclerView.adapter = SavedSearchAdapter(savedSearch)
     }
 }
 
