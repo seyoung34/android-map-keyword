@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PlaceAdapter(private val items : List<Place>, private val onItemClick : (Place) -> Unit) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
+class PlaceAdapter(private var items : List<Place>, private val onItemClick : (Place) -> Unit) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val onItemClick: (Place) -> Unit) : RecyclerView.ViewHolder(view){
 
@@ -43,5 +43,10 @@ class PlaceAdapter(private val items : List<Place>, private val onItemClick : (P
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun updateData(newItems: List<Place>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 }

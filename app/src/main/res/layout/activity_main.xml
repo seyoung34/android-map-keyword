@@ -72,14 +72,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintWidth_percent="0.5" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/searchBotton"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="60dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@id/data_generation"-->
-    <!--        android:text="새로고침"-->
-    <!--        android:textSize="24sp"-->
-    <!--        android:gravity="center"-->
-    <!--        android:background="#CDDC39"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

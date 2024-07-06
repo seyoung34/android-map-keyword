@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SavedSearchAdapter(private val items : List<SavedSearch> , private val onCloseClick : (SavedSearch) -> Unit) : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
+class SavedSearchAdapter(private var items : List<SavedSearch> , private val onCloseClick : (SavedSearch) -> Unit) : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val onCloseClick: (SavedSearch) -> Unit) : RecyclerView.ViewHolder(view){
 
@@ -40,6 +40,11 @@ class SavedSearchAdapter(private val items : List<SavedSearch> , private val onC
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun updateData(newItems: List<SavedSearch>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
 }

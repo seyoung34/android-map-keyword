@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var placeAdapter: PlaceAdapter
+    private lateinit var savedSearchAdapter: SavedSearchAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,8 +31,20 @@ class MainActivity : AppCompatActivity() {
 
         val dbManager = DatabaseManager(context = this)
 
+        placeAdapter = PlaceAdapter(emptyList()){ place ->
+            dbManager.insertSavedPlace(place.id, place.name)
+            updateSavedSearch(dbManager)
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(this)
-        savedSearch.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)    //마지막 인자는 역순으로 배치 여부
+        recyclerView.adapter = placeAdapter
+
+        savedSearchAdapter = SavedSearchAdapter(emptyList()){ savedSearch ->
+            dbManager.deleteSavedPlace(savedSearch.id)
+            updateSavedSearch(dbManager)
+        }
+        savedSearch.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)    //마지막 인자는 역순으로 배치 여부
+        savedSearch.adapter = savedSearchAdapter
 
         closeIcon.setOnClickListener {
             search.text.clear()
@@ -50,40 +66,18 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-//        searchBotton.setOnClickListener {   //삭제 예정
-//            val query = search.text.toString()
-//            if (query.isEmpty()) {
-//                Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show()
-//                return@setOnClickListener
-//            }
-//            val dummy = dbManager.searchPlacesKind(query)
-//            recyclerView.adapter = PlaceAdapter(dummy){ place ->
-//                dbManager.insertSavedPlace(place.name)  // 클릭 시 db에 이름 추가
-//                updateSavedSearch(dbManager, savedSearch)
-//            }
-//            Log.d("testt", dummy.toString())
-//        }
-
         //검색창에 텍스트가 바뀔 때마다 감지해서 검색
         search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // 텍스트 변경 후 호출
                 val query = s.toString()
-                val dummy = dbManager.searchPlacesKind(query) //리턴값이 List<Place>
-                recyclerView.adapter = PlaceAdapter(dummy){ place ->
-                    dbManager.insertSavedPlace(place.id,place.name)
-                    updateSavedSearch(dbManager, savedSearch)
-                }
+                val places = dbManager.searchPlacesKind(query) //리턴값이 List<Place>
+                placeAdapter.updateData(places)
                 Log.d("testt", "텍스트 변경")
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 텍스트 변경 전 호출
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // 텍스트가 변경될 때마다 호출
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
         })
 
         //테이블 삭제
@@ -92,18 +86,14 @@ class MainActivity : AppCompatActivity() {
             dbManager.createTable()
         }
 
-        updateSavedSearch(dbManager, savedSearch)
+        updateSavedSearch(dbManager)
 
 
     }
 
     //저장된 검색어 업데이트
-    private fun updateSavedSearch(dbManager: DatabaseManager, recyclerView: RecyclerView) {
-        val savedSearch = dbManager.getSavedSearches()
-        recyclerView.adapter = SavedSearchAdapter(savedSearch){SavedSearch ->
-                dbManager.deleteSavedPlace(SavedSearch.id)   //클릭된 아이템의 이름으로 SavedSearch에서 제거
-                updateSavedSearch(dbManager, recyclerView)  //리스트 업데이트
-        }
+    private fun updateSavedSearch(dbManager: DatabaseManager) {
+        val savedSearches = dbManager.getSavedSearches()
+        savedSearchAdapter.updateData(savedSearches)
     }
 }
-
