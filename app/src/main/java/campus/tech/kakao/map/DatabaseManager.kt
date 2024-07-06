@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteDatabase
 class DatabaseManager(context: Context) {
 
     private val dbHelper = DatabaseHelper(context) //SQLiteOpenHelper객체 생성
+
     private val db: SQLiteDatabase = dbHelper.writableDatabase //open하고 실제 데이터베이스..?
+    //예외 처리 try-catch로 처리하기
 
     fun insertPlace(name: String, address: String, kind: String) {
         val values = ContentValues().apply {

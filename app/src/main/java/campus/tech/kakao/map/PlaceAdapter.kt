@@ -9,18 +9,24 @@ import androidx.recyclerview.widget.RecyclerView
 
 class PlaceAdapter(private val items : List<Place>, private val onItemClick : (Place) -> Unit) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View, private val onItemClick: (Place) -> Unit) : RecyclerView.ViewHolder(view){
 
         val id : TextView = view.findViewById(R.id.id)
         val name: TextView = view.findViewById(R.id.name)
         val address: TextView = view.findViewById(R.id.address)
         val kind: TextView = view.findViewById(R.id.kind)
+
+        fun bind(item: Place) {
+            itemView.setOnClickListener {
+                onItemClick(item)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View =
             LayoutInflater.from(parent?.context).inflate(R.layout.item_recyclerview, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -30,9 +36,7 @@ class PlaceAdapter(private val items : List<Place>, private val onItemClick : (P
             name.text = item.name
             address.text = item.address
             kind.text = item.kind
-            itemView.setOnClickListener{
-                onItemClick(item)
-            }
+            bind(items[position])
             Log.d("Testt",holder.name.text.toString())
         }
     }

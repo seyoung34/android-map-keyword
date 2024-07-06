@@ -7,7 +7,24 @@ import android.database.sqlite.SQLiteOpenHelper
 //데이터베이스 생성 및 업그레이드를 관리
 class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
-    companion object {  //
+
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(TABLE_CREATE) //Place저장 테이블
+        db.execSQL(SAVED_SEARCH_CREATE) //최근 검색 테이블
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $SAVED_SEARCH_TABLE_NAME")
+        onCreate(db)
+    }
+
+    fun dropTable(db: SQLiteDatabase) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $SAVED_SEARCH_TABLE_NAME")
+    }
+
+    companion object {  //companion object는 거의 클래스 최하단에 위치하기 권장
         private const val DATABASE_NAME = "places.db"
         private const val TABLE_NAME = "places"
         private const val SAVED_SEARCH_TABLE_NAME = "SavedSearch"
@@ -23,23 +40,6 @@ class DatabaseHelper(context : Context) : SQLiteOpenHelper(context, DATABASE_NAM
         private const val SAVED_SEARCH_CREATE =
             "CREATE TABLE IF NOT EXISTS $SAVED_SEARCH_TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY, " +
                     "$COLUMN_NAME TEXT)"
-    }
-
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(TABLE_CREATE) //Place저장 테이블
-        db.execSQL(SAVED_SEARCH_CREATE) //최근 검색 테이블
-    }
-
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        db.execSQL("DROP TABLE IF EXISTS $SAVED_SEARCH_TABLE_NAME")
-        onCreate(db)
-    }
-
-    fun dropTable(db: SQLiteDatabase) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        db.execSQL("DROP TABLE IF EXISTS $SAVED_SEARCH_TABLE_NAME")
     }
 
 }
